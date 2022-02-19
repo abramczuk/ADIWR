@@ -42,6 +42,9 @@ Udział w zajęciach wymaga instalacji R:
 
 * prezentacja z pierwszych zajęć
 * skrypt z pierwszych zajęć
+* notebook z pierwszych zajęć
+* dane PISA w formacie xls
+* dane PISA w formacie csv
 * zadania domowe
 
 ## Materiały dodatkowe dla zainteresowanych
