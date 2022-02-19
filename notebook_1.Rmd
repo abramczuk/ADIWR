@@ -1,0 +1,453 @@
+---
+title: "AnalizaR"
+author: "Katarzyna Abramczuk, Agnieszka Karlińska, Tomasz Żółtak, Jakub Rybacki"
+date: "19.02.2022"
+output:
+  html_notebook:
+    toc: true
+editor_options:
+  chunk_output_type: inline
+---
+
+![](https://raw.githubusercontent.com/tzoltak/3502-SCC-ADR/master/belka_gorna.png)
+
+# Wczytywanie i oglądanie danych do zajęć
+
+Na dzisiejszych zajęciach ponownie skorzystamy z danych z badania PISA 2009, ale tym razem z nieco szerszym zestawem zmiennych zapisanych w zbiorze. Wczytajmy *dane* do ramki danych `pisa`, a *codebook* do ramki danych `codebook`.
+
+```{r}
+library(readxl)
+pisa <- read_excel("PISA-2009-pogimnazjalne.xlsx", "data")
+codebook <- read_excel("PISA-2009-pogimnazjalne.xlsx", "codebook")
+```
+
+Przyjrzyjmy się nowej ramce danych `pisa`:
+
+```{r}
+str(pisa)
+```
+
+- `nrow()` i `ncol()`, aby otrzymać odpowiednio liczbę wierszy i kolumn *ramki danych*:  
+```{r}
+nrow(pisa)
+ncol(pisa)
+```
+- `head()` i `tail()`, aby obejrzeć tylko kilka pierwszych lub ostatnich wierszy *ramki danych*:  
+```{r}
+head(pisa)
+tail(pisa)
+
+# Jeśli chcemy otrzymać określoną liczbę wierszy (np. 10), musimy dodać argument „n”:
+head(pisa, n = 10)
+```
+- `summary()`, aby obejrzeć zestawienie wartości podstawowych statystyk poziomu wartości dla wszystkich zmiennych liczbowych danej *ramki danych*:  
+```{r}
+summary(pisa)
+```
+
+# Operatory porównania i wektory logiczne
+
+## Operatory porównania
+
+Do tej pory na wektorach liczbowych (w tym na kolumnach *ramki danych*) wykonywaliśmy operacje arytmetyczne, jednak często może nas interesować, czy są one większe, mniejsze lub równe w stosunku do pewnych interesujących nas wartości. W tym celu możemy użyć operatorów:
+
+- `==` - czy równe?
+- `>`, `<` - czy większe/mniejsze?
+- `>=`, `<=` - czy mniejsze/większe lub równe?
+
+Przykładowo:
+
+```{r}
+y <- head(pisa$scoreKKS)
+y
+y == 182
+y > 190
+```
+
+Operatory porównania możemy też zastosować w odniesieniu do wektorów tekstowych, choć w tym przypadku zwykle użyteczny jest tylko operator zwracający informację, czy dane wartości są sobie równe:
+
+```{r}
+z <- head(pisa$scoreKKS_5cat)
+z
+z == "high"
+# operatory większe/mniejsze też działają dla ciągów znaków,
+# ale to, co sprawdzają, rzadko jest dla nas interesującą informacją
+z > "medium"
+```
+
+## Wektory logiczne
+
+W wyniku zastosowania operatorów porównania zwracany jest wektor wartości logicznych:
+
+```{r}
+porownanie <- z == "high"
+str(porownanie)
+```
+
+## Operatory logiczne, logika trójwartościowa
+
+Do operacji na wektorach logicznych można wykorzystać operatory:
+
+- `&`, czyli koniunkcja (*AND/I*) - łączy dwa wyrażenia i jest prawdziwa tylko wówczas, gdy oba wyrażenia są prawdziwe
+- `|`, czyli alternatywa (*OR/LUB*) - łączy dwa wyrażenia i jest prawdziwa, gdy co najmniej jedno z wyrażeń jest prawdziwe
+- `!`, czyli negacja (*NOT/NIE*) - zwraca wartość TRUE, jeśli wyrażenie przyjmuje wartość FALSE i wartość FALSE, jeśli wyrażenie przyjmuje wartość TRUE
+
+Należy zwrócić uwagę, że, jak to było widać powyżej, R rozróżnia **3 wartości logiczne**:
+
+- `TRUE` - prawda;
+- `FALSE` - fałsz;
+- `NA` - brak danych.
+
+Popatrzmy:
+
+```{r}
+l <- c(TRUE, FALSE, NA)
+!l
+```
+
+```{r}
+l
+l | TRUE
+l | FALSE
+```
+
+```{r}
+l
+l & TRUE
+l & FALSE
+```
+
+## Określanie, które elementy są brakami danych
+
+Również w kontekście operacji logicznych R konsekwentnie traktuje brak danych (`NA`) jako *to może być prawda lub fałsz, tylko nie wiem, które z nich w tym konkretnym przypadku*. Oprócz nieco zawikłanych reguł rządzących tym, jaka wartość zostanie zwrócona w omówionych wyżej operacjach logicznych, skutkuje to również tym, że **nie da się** sprawdzić, które elementy wektora są brakami danych, stosując intuicyjną składnię:
+
+```{r}
+l
+l == NA
+```
+
+W tym przypadku `==` nie zadziała zgodnie z naszymi oczekiwaniami. Porównanie czegokolwiek do braku danych zwraca brak danych!
+ 
+**Aby móc zidentyfikować braki danych, konieczne jest użycie specjalnie w tym celu utworzonej funkcji `is.na()`:**
+
+```{r}
+is.na(l)
+```
+
+## Funkcje `any()` i `all()`
+
+Funkcje `any()` i `all()` służą do sprawdzania, czy spośród elementów wektora logicznego odpowiednio choć jeden lub wszystkie przyjmują wartość `TRUE`. Np. aby sprawdzić, czy dana kolumna *ramki danych* `pisa` zawiera jakieś braki danych, możemy użyć kodu:
+
+```{r}
+# wyniki testu PISA z matematyki nie zawierają braków danych:
+any(is.na(pisa$scorePISAMath))
+# ale wyniki Testu Matryc Ravena już tak:
+any(is.na(pisa$scoreTMR))
+# alternatywnie:
+all(!is.na(pisa$scorePISAMath))
+all(!is.na(pisa$scoreTMR))
+```
+
+# Wykorzystanie wektorów logicznych do indeksowania
+
+## Wybór elementów wektora
+
+Aby wybrać pewne elementy wektora, wewnątrz operatora `[]` możemy umieścić wektor logiczny (lub wyrażenie, które tworzy taki wektor) - zwrócone zostaną te elementy, dla których elementy takiego wektora przyjmują wartość `TRUE`.
+
+Np. aby wybrać tylko te wyniki testu PISA z matematyki, które uzyskali uczniowie LO:
+
+```{r}
+scorePISAMathLO <- pisa$scorePISAMath[pisa$schoolType == "LO"]
+```
+
+Albo tylko uczennice:
+
+```{r}
+scorePISAMathF <- pisa$scorePISAMath[pisa$sex == "female"]
+```
+
+## Wybór wierszy *ramki danych*
+
+Często możemy chcieć wybrać do analiz pewien podzbiór wierszy (jednostek obserwacji) z *ramki danych*. W tym celu również można użyć operatora `[]` i indeksów lub wektorów logicznych. Ze względu na to, że *ramka danych* jest strukturą dwuwymiarową, należy jednak użyć nieco innej składni: wewnątrz nawiasów kwadratowych po podaniu indeksu lub wektora logicznego służącego do wskazania, które wiersze mają zostać zwrócone, należy postawić przecinek. 
+
+### Wykorzystanie wektorów logicznych
+
+Aby wybrać tylko uczniów liceów profilowanych, należy użyć następującego kodu:
+
+```{r}
+pisaLP <- pisa[pisa$schoolType == "LP", ]
+str(pisaLP)
+```
+
+## Problem z brakami danych
+
+Jeśli wektor logiczny, którego używamy do wskazania, jakie elementy wektora lub wiersze *ramki danych* mają zostać wybrane, zawiera braki danych, pojawiają się problemy:
+
+```{r}
+x <- 1:5
+y <- c(NA, rep("K", 4))
+z <- y == "K"
+x
+y
+z
+x[z]
+```
+Element lub wiersz, dla którego wartość wektora logicznego była równa `NA`, zostanie zwrócony, ale jego wartość (wartości wszystkich kolumn w *ramce danych*) zostanie zmieniona na brak danych (`NA`)!
+
+## Operator `%in%`
+
+Aby uniknąć ww. problemów, można wykorzystać operator `%in%`. Służy on do sprawdzenia, czy element należy do wektora. Działa w taki sposób, że dla każdego elementu wektora stojącego przed nim zwraca:
+
+- `TRUE` jeśli występuje on wśród elementów wektora podanych po operatorze `%in%`
+- `FALSE` w każdym innym przypadku
+
+W szczególności oznacza to, że wyrażenie w postaci: `wektor %in% TRUE` zawsze będzie zwracać wyłącznie wartości `TRUE` lub `FALSE`, np.:
+
+```{r}
+z
+z %in% TRUE
+
+# Inny przykład:
+a <- LETTERS[1:10]
+a
+b <- c("A", "B", "X")
+b %in% a
+```
+
+Zastosujmy teraz operator `%in%` do wyciągnięcia wybranych elementów wektora:
+
+```{r}
+x[z %in% TRUE]
+```
+
+Warto zwrócić uwagę, że jeśli, tak jak w omawianym przykładzie, wektor logiczny tworzony jest poprzez porównanie do konkretnej wartości, to operator `%in%` może zostać użyty już wcześniej:
+
+```{r}
+x <- 1:5
+y <- c(NA, rep("K", 4))
+z <- y %in% "K"
+x
+y
+z
+x[z]
+```
+
+# Pakiet *dplyr* - najważniejsze informacje
+
+- Element [*tidyverse*](https://github.com/tidyverse/tidyverse)
+  - Dobrze zintegrowany z innymi pakietami, pomocnymi przy imporcie, czyszczeniu i przekształcaniu danych w R (np.może być wykorzystany jako backend do SQLowej bazy danych).
+  - Inne pakiety należące do *tidyverse*, które były już wspomniane na tych zajęciach, to służące do importu/eksportu danych *readxl* i *readr*.
+- Oferuje bardzo duże możliwości przekształcania danych przechowywanych w postaci tabelarycznej (ramek danych).
+  - Wykorzystuje przy tym swoją własną strukturę danych, tzw. *tibble*. Na nasze potrzeby możemy o niej myśleć jako o ramce danych (choć w pewnych sytuacjach zachowuje się nieznacznie inaczej i oferuje pewne dodatkowe możliwości). W materiałach do dzisiejszego warsztatu obiekty *tibble* będą zwykle - formalnie niepoprawnie - opisywane po prostu jako *ramki danych*.
+  - Funkcje pakietu *dplyr* zaakceptują jako argument zarówno obiekt typu *tibble*, jak i *ramkę danych*, jednak zwrócą zawsze obiekt typu *tibble*.
+  - Obiekt typu *tibble* zawsze możemy skonwertować na całkiem typową ramkę danych używając funkcji `as.data.frame()`. Z kolei ramkę danych możemy zamienić na *tibble* funkcją `as_tibble()`.
+- Wykorzystuje spójną konwencję nazewniczą i składniową.
+  - Pewne elementy składni są nieco odmienne niż w typowych funkcjach R (ale można się łatwo przyzwyczaić).
+- Umożliwia wykorzystanie operatora `%>%` do tworzenia ciągów przekształceń (tzw. *pipe*) wykonywanych na jednej ramce danych.
+- *Ściąga* zawierająca skrótowy opis funkcjonalności pakietu *dplyr* znajduje się [tutaj](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf).Uwaga: w 2020 roku wprowadzono nową wersję pakietu *dplyr* - ściąga nie uwzględnia nowych funkcji. O zmianach można przeczytać [tutaj](https://github.com/tidyverse/dplyr/releases).
+
+Kod poniżej sprawdza, czy pakiet *dplyr* jest zainstalowany na tym komputerze, a jeśli okazałoby się, że nie, to go instaluje. Następnie ładuje ten pakiet.
+
+```{r}
+if (!("dplyr" %in% installed.packages()[, 1])) {
+  install.packages("dplyr")
+}
+library(dplyr)
+```
+
+# Wybieranie obserwacji
+
+Jeśli chcemy usunąć z analizowanego zbioru jakieś obserwacje, możemy to zrobić, korzystając z funkcji `filter()`. Jako pierwszy argument przyjmuje ona *ramkę danych*, a jako drugi argument warunek, który muszą spełniać obserwacje, aby pozostać w zwracanym zbiorze.
+
+Jedną ze specyficznych cech funkcji z pakietu *dplyr* jest przy tym to, że jeśli odnosimy się do nazw zmiennych z *ramki danych* przekazanych pierwszym argumentem, możemy po prostu podawać ich nazwy, bez poprzedzania ich nazwą samej *ramki danych* w połączeniu z operatorem `$`. Np. chcąc wybrać wyłącznie uczniów LP, można użyć wywołania:
+
+```{r}
+pisaLP <- filter(pisa, schoolType == "LP")
+nrow(pisaLP)
+```
+
+Jeśli chcemy filtrować po większej liczbie zmiennych, kolejne warunki dodajemy po przecinku.
+
+```{r}
+pisaLP_2 <- filter(pisa, schoolType == "LP", sex == "female")
+```
+
+Możliwy jest także wybór wielu kryteriów filtrowania poprzez operator `%in%`.
+
+```{r}
+pisaLPT <- filter(pisa, schoolType %in% c("LP", "ZSZ"))
+```
+
+## Braki danych przy wybieraniu obserwacji funkcją `filter()`
+
+Jak widzieliśmy wcześniej, operator `[]`, którego można również użyć do wybrania tylko niektórych obserwacji z *ramki danych*, zachowywał się w bardzo specyficzny sposób, jeśli wektor logiczny wskazujący, które wiersze mają zostać wybrane, zawierał braki danych.
+
+Funkcja `filter()` działa inaczej niż operator `[]` - **zawsze zwraca tylko te wiersze, dla których warunek przyjmuje wartość `TRUE`**, odrzucając zarówno te, dla których warunek przyjmuje wartość `FALSE`, jak i te, dla których jego wartość to brak danych (`NA`).
+
+```{r}
+pisaHead <- head(pisa)
+# porównajmy:
+pisaHead[pisaHead$scoreKKS > 185, ]
+filter(pisaHead, scoreKKS > 185)
+```
+
+# Wybór zmiennych przy pomocy funkcji `select()`
+
+Funkcja `select()` pozwala wybrać tylko pewne zmienne z *ramki danych*. Jako pierwszy argument przyjmuje ona *ramkę danych*, z której będziemy chcieli wybrać tylko niektóre kolumny. Następne argumenty służą do definiowania, które kolumny mają zostać wybrane, i mogą mieć postać (między innymi):
+
+- nazwy zmiennej podanej jako wyrażenie języka (bez otaczania jej cudzysłowem), np.:
+```{r}
+select(pisa, schoolType, sex)
+```
+- nazw dwóch zmiennych (podanych jako wyrażenia języka) połączonych operatorem `:` - oznacza to, że mają być wybrane wszystkie kolumny od danej do danej:  
+```{r}
+select(pisa, scorePISAMath:scoreTMR)
+```
+- wywołań specjalnych funkcji, m.in. `starts_with()`, `ends_with()` lub `contains()`. Pozwalają one wybrać kolumny, których nazwy odpowiednio się zaczynają/kończą lub zawierają podany ciąg znaków:
+```{r}
+select(pisa, starts_with("score"))
+select(pisa, contains("PISA"))
+```
+- wywołania funkcji `where()`, która pozwala wskazać typ interesujących nas zmiennych:
+```{r}
+select(pisa, where(is.character))
+select(pisa, where(is.numeric))
+```
+
+Opisy innych funkcji, które można wykorzystać w ramach `select()`, znajdują się [tutaj](https://tidyselect.r-lib.org/reference/select_helpers.html).
+
+W tym samym wywołaniu `select()` można łączyć różne typy argumentów, np.:
+
+```{r}
+wybrane <- select(pisa, id, ends_with("pos"), parEdu:income)
+wybrane
+```
+
+Można także wskazać, które zmienne mają się **nie** znaleźć w zbiorze wynikowym:
+
+```{r}
+select(pisa, -sex)
+select(pisa, -c(id, schoolType, sex, age))
+```
+
+Warto zwrócić uwagę, że odpowiednio konstruując wywołanie funkcji `select()`, można decydować o kolejności kolumn w *ramce danych*, która zostanie przez tę funkcję zwrócona. Alternatywny sposób na zmianę kolejności kolumn to zastosowanie funkcji `relocate()`. Domyślnie przesuwa ona kolumnę lub kolumny na początek *ramki danych* (a więc w lewą stronę). Jeśli chcemy wskazać konkretne miejsce, w którym ma się znaleźć interesująca nas kolumna, musimy dodać argumenty `before` lub `after`. Zobaczmy:
+
+```{r}
+relocate(pisa, sex)
+relocate(pisa, sex, .after = id)
+relocate(pisa, sex, .before = schoolId)
+```
+
+# Operator `%>%`
+
+Operator `%>%` pozwala w łatwy i wygodny sposób łączyć ze sobą kolejne operacje wykonywane na tym samym obiekcie - typowo ramce danych (lub *tibble*). Działa on w ten spsób, że:
+
+`x %>% f(y)` jest równoważne `f(x, y)`,  
+a więc `g(x) %>% f(y)` jest równoważne `f(g(x), y)`.
+
+Np. możemy wybrać z ramki najpierw określone wiersze a potem kolumny przy użyciu operatora `%>%` jako:
+
+```{r}
+pisa %>%
+  filter(schoolType == "LP") %>%
+  select(starts_with("score")) 
+```
+
+Zwróćmy uwagę, że kodzie powyżej pomijamy wpisywanie pierwszego argumentu w wywołaniu funkcji `filter()` i `select()` - zastosowanie operatora `%>% `sprawia, że jako pierwszy argument do tych funkcji automatycznie zostanie przekazany wynik działania kodu z poprzednich wierszy (ściśle: poprzedzającego operator `%>%` bezpośrednio poprzedzający wywołanie danej funkcji).
+
+Chociaż przy prostych operacjach, jakie tutaj wykonujemy, nie widać w pełni zalet używania operatora `%>%`, jednak w przypadku skomplikowanych ciągów operacji przekształcania danych jego wykorzystanie bardzo pozytywnie wpływa na czytelność kodu i łatwość zrozumienia, jakie operacje na danych są wykonywane.
+
+Uwaga: Jeżeli chcemy ułatwić sobie wpisywanie `%>%`, możemy wykorzystać skrót Ctrl+Shift+M.
+
+# Sortowanie obserwacji
+
+Do sortowania obserwacji służy funkcja `arrange()`. Domyślnie wyniki sortowane są od najmniejszego do największego, a w przypadku liter od A do Z. Jeżeli zależy nam na odwrotnym sortowaniu, musimy dodać funkcję `desc()` (descending – malejąco) do sortowanej zmiennej. Aby posortować zbiór danych ze względu na wyniki testu z czytania, należy użyć kodu:
+
+```{r}
+# rosnąco
+pisa %>%
+  arrange(scorePISARead)
+
+# malejąco
+pisa %>%
+  arrange(desc(scorePISARead))
+```
+
+
+# Przekształcanie zmiennych przy zachowaniu struktury zbioru
+
+Często chcemy dokonać pewnych przekształceń zmiennych czy obliczyć nowe zmienne bez zmieniania struktury zbioru - a więc zachowując ten sam zestaw wierszy (jednostek obserwacji) i ten sam zestaw zmiennych. W ramach pakietu *dplyr* pozwala na to funkcja `mutate()`. 
+
+1. `mutate()` zwraca obiekt zawierający wszystkie zmienne, które zawierała przekazana te funkcji *ramka danych* oraz dodatkowo *doklejone* do nich te, które w ramach wywołania `mutate()` utworzyliśmy.
+2. jeśli nazwy tworzonych przez nas zmiennych pokrywają się z nazwami zmiennych już istniejącymi w ramce danych, to pierwotne wartości tych zmiennych zostaną nadpisane.
+
+Poniższy kod dodaje do ramki danych `pisa` zmienną opisującą logarytm dochodów i wycentrowane (tj. przekształcone w taki sposób, aby by ich średnia była równa 0) wyniki Testu Matryc Ravena.
+
+```{r}
+pisa <- pisa %>%
+  mutate(log_income = log(income),
+        scoreTMR = scoreTMR - mean(scoreTMR, na.rm = TRUE))
+# obejrzyjmy wynik
+pisa
+```
+
+Korzystając z funkcji `mutate()`, należy pamiętać, że **kolejne definiowane przekształcenia wykonywane są sekwencyjnie** i jeśli w którymś z wcześniejszych wyrażeń przekształcimy daną zmienną, to jeśli pojawi się ona w jakimś wyrażeniu poniżej, zostanie w nim wykorzystana w postaci już przekształconej (a nie w tej, w jakiej znajdowała się w *ramce danych* przekazanej do `mutate()`). 
+
+## Funkcje `ifelse()` i `case_when()`
+
+Przekształcając zmienne przy pomocy funkcji `mutate()` nie możemy niestety zastosować użytecznej techniki polegającej na przypisaniu pewnych wartości tylko wybranym elementom (obserwacjom) bez modyfikowania pozostałych, korzystając ze składni `zmienna[wybieramy_elementy] = nowa_wartość`. Analogiczny skutek możemy jednak osiągnąć wykorzystując w ramach funkcji `mutate()` funkcję `ifelse()`. Przyjmuje ona trzy argumenty: pierwszym jest wektor wartości logicznych, które decydują o tym, z którego spośród dwóch kolejnych wektorów przekazanych jako argumenty wzięte będą wartości kolejnych elementów wektora zwracanego jako wynik działania funkcji. Dla elementów, dla których wektor będący pierwszym argumentem funkcji `ifelse()` przyjmuje wartość `TRUE`, wybrane zostaną odpowiednie elementy wektora podanego jako drugi argument, a dla tych, dla których przyjmuje wartość `FALSE`, odpowiednie elementy wektora podanego jako trzeci argument. Np.
+
+```{r}
+ifelse(c(TRUE, FALSE, TRUE), c(1, 2, 3) , c(10, 11, 12))
+```
+
+Załóżmy, że chcemy przekształcić zmienną `noPersHous` opisującą liczbę osób w gospodarstwie domowym ucznia, tak aby wszystkie wartości większe od 7 zostały zamienione na 7. *Klasycznie* zrobilibyśmy to w ten sposób:
+
+```{r}
+pisa$noPersHous[pisa$noPersHous > 7 & !is.na(pisa$noPersHous)] = 7
+```
+
+Jednak to samo możemy osiągnąć korzystając z funkcji `mutate()` i `ifelse()`:
+
+```{r}
+pisa <- pisa %>%
+  mutate(noPersHous = ifelse(noPersHous > 7 & !is.na(noPersHous),
+                             7,
+                             noPersHous))
+```
+
+Sens powyższego kodu jest następujący: w ramach ramki danych `pisa` zmodyfikuj wartości zmiennej `noPersHous` w ten sposób, że elementom, ktorych wartość jest większa niż 7, przypisz 7, a pozostałe pozostaw bez zmian.
+
+Inny przykład: utwórzmy nową zmienną `math_read`, która wskazuje, czy dany uczeń osiągnął lepszy wynik z matematyki czy z czytania. 
+
+```{r}
+pisa %>%
+  mutate(math_read = ifelse(scorePISAMath > scorePISARead, "math", "read")) %>%
+  select(scorePISAMath, scorePISARead, math_read)
+```
+
+Gdybyśmy chcieli dodać kolejne warunki, musielibyśmy wielokrotnie wywołać `ifelse()`. Byłoby to nieco uciążliwe. W takiej sytuacji warto skorzystać z funkcji `case_when()`. Ma ona nieco inną składnię niż `iflese()`. Zobaczmy na przykładzie.
+
+Podzielmy obserwacje na cztery grupy na podstawie wyników testu z matematyki, używając do tego celu kwartyli: 
+
+- `very low`, jeśli wynik ucznia był niższy niż 1. kwartyl wyników
+- `low`, jeśli wynik ucznia mieścił się w przedziale pomiędzy 1. kwartylem a medianą
+- `high`, jeśli wynik ucznia mieścił się w przedziale pomiędzy medianą a 3. kwartylem
+- `very high`, jeśli wynik ucznia był wyższy niż 3. kwartyl wyników
+
+```{r}
+pisa %>%
+  mutate(math_avg = case_when(scorePISAMath < quantile(scorePISAMath, 0.25) ~ "very low",
+                              scorePISAMath < median(scorePISAMath) ~ "low",
+                              scorePISAMath < quantile(scorePISAMath, 0.75) ~ "high",
+                              TRUE ~ "very high")) %>%
+  select(scorePISAMath, math_avg)
+```
+
+---
+
+Materiały na zajęcia *Analiza danych ilościowych z wykorzystaniem R* zostały przygotowane w ramach projektu *Program zintegrowanych działań na rzecz rozwoju Uniwersytetu Warszawskiego*, realizowanego w ramach programu operacyjnego Wiedza Edukacja Rozwój, oś priorytetowa III. *Szkolnictwo wyższe dla gospodarki i rozwoju*, działanie: 3.5 *Kompleksowe programy szkół wyższych*.
+
+---
+
+![](https://raw.githubusercontent.com/tzoltak/3502-SCC-ADR/master/belka_dolna.png)
