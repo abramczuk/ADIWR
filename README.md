@@ -40,12 +40,8 @@ Udział w zajęciach wymaga instalacji R:
 
 ### Zajęcia pierwsze - wprowadzenie
 
-* prezentacja z pierwszych zajęć
-* skrypt z pierwszych zajęć
-* notebook z pierwszych zajęć
-* dane PISA w formacie xls
-* dane PISA w formacie csv
-* zadania domowe
+* [materiały wykorzystywane na zajęciach](https://github.com/abramczuk/ADIWR/blob/main/zajecia1%20-%20wprowadzenie.zip)
+* zadanie domowe
 
 ## Materiały dodatkowe dla zainteresowanych
 
