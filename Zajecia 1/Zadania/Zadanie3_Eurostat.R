@@ -5,6 +5,7 @@
 
 # Bedziemy musieli zainstalowac nastepujace paczki:
 install.packages("eurostat")
+require("tidyr")
 require("eurostat")
 require("dplyr")
 
@@ -19,6 +20,7 @@ require("dplyr")
 
 # 3. Z otrzymanych danych wybierz tylko te dla krajów z wektora Sasiedztwo 
 #    Interesuje cie kolumna geo w zbiorze danych. 
+Sasiedztwo <- c("PL", "SK", "CZ", "DE")
 
 
 # 4. Sposród tych danych wybierz te, które dotycza pierwszego kwintyla oraz wylacznie wyniki dla 2015 roku. 
@@ -35,4 +37,5 @@ require("dplyr")
 fileDirectory <- paste0(dirname(rstudioapi::getSourceEditorContext()$path),"/")
 fileName <- "EurostatOutput.csv"
 filePath <- paste0(fileDirectory, fileName)
+
 
