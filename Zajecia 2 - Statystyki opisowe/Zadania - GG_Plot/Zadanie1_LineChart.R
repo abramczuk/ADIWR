@@ -31,6 +31,6 @@ dane  <- get_eurostat("earn_nt_taxrate",
 # 5. Zmien kolory wykresu na czerwony i szary 
 
 
-# 6. Zmien kolory wykresu na czerwony i szary 
+# 6. Dodaj etykiety z nazwami krajów.  
 
 
