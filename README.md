@@ -36,12 +36,58 @@ Udział w zajęciach wymaga instalacji R:
 * Instalator R należy pobrać ze strony [CRAN](https://cran.r-project.org/).
 * Instalator RStudio należy pobrać ze [strony dostawcy](https://www.rstudio.com/products/rstudio/download/#download).
 
-## Materiały do zajęć
+## Materiały do zajęć dla grup 2 i 3
 
-### Zajęcia pierwsze - wprowadzenie
+### Materiały z zajęć
 
-* [materiały wykorzystywane na zajęciach](https://github.com/abramczuk/ADIWR/blob/main/zaj%C4%99cia%201%20wprowadzenie.zip)
-* zadanie domowe
+* [zajęcia 1 - wprowadzenie](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia1%20-%20wprowadzenie.pdf)
+* [zajęcia 2 - ramki danych](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%202.zip)
+* [zajecia 3 - podstawowe operacja na ramkach danych](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%203.zip)
+
+### Prace domowe
+
+* [Pakiet zadań 1 - ramki danych i podstawowe operacje na ramkach danych](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/Pakiet%20zadan%201.zip)
+
+### Aktualnie potrzebne zbiory danych
+
+* [wybory i cesarze](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/dane.zip)
+
+## Materiały do pracy nad projektem zaliczeniowym
+
+### Przykładowe zbiory danych
+
+* Wiele zbiorów na różnorodne tematy z projektu [tidytuesday](https://github.com/rfordatascience/tidytuesday/tree/master/data); [tutaj](https://thomasmock.netlify.app/post/tidytuesday-a-weekly-social-data-project-in-r/) więcej o tym projekcie
+* Europejskie dane ekonomiczno-społeczne [Eurostat](https://ec.europa.eu/eurostat/web/main/data/database); [paczka](https://cran.r-project.org/web/packages/eurostat/index.html) do ich obsługi 
+* Dane ekonomiczno-społeczne [OECD](https://stats.oecd.org/); [paczka](https://cran.r-project.org/web/packages/OECD/) do ich obsługi
+* Dane z badań edukacyjnych można pobrać przy pomocy tej [paczki](https://cran.r-project.org/web/packages/intsvy/); [tutaj](http://www.education.ox.ac.uk/research/r-intsvy-package/) znajduje się instrukcja jej użycia
+* Duży europejski sondaż społeczny [ESS](https://www.europeansocialsurvey.org/); [paczka](https://cran.r-project.org/web/packages/essurvey/) do jego obsługi
+* Dane dotyczące pandemii [COVID-19](https://cran.r-project.org/package=COVID19)
+* Polski projekt [Otwarte Dane](https://www.gov.pl/web/cyfryzacja/otwarte-dane-dostep-standard-edukacja2); [paczka](https://cran.r-project.org/package=httr), którą można wykorzystać do ich pobrania
+* Różne ciekawe dane dostępne na [Kaggle] (https://www.kaggle.com/datasets)
+* Dane z serwisów społecznościowych (ich użycie może wymagać założenia konta deweloperskiego): [Tweeter](https://cran.r-project.org/package=rtweet), [YouTube](https://cran.r-project.org/package=tuber), [Instagram](https://cran.r-project.org/package=instaR), [Facebook](https://cran.r-project.org/package=Rfacebook)
+
+### Kroki wymagane do realizacji projektu
+
+#### Etap 1
+* Wybór tematu i jego uzasadnienie - Upewnij się, że wiesz dla kogo i dlaczego wyniki tych analiz będą interesujące. Jaki jest problem badawczy? 
+* Wybór źródła danych - Upewnij się, że wiesz co dane opisują, skąd zostały pobrane, jakie jest ich pierwotne źródło, co jest jednostką obserwacji w zbiorze?
+* Wybór zmiennych do analizy - Upewnij się, że wiesz jakie zmienne z wybranego zbioru będą przydatne przy odpowiedzi na postawiony problem badawczy. W jaki sposób chcesz je przekształcać? Jakie statystyki i dla jak zdefiniowanych grup chcesz obliczyć? 
+
+#### Etap 2
+* Przygotowanie kodu przekształcającego dane w celu przygotowania ich do właściwych analiz wraz z opisem dokonywanych przekształceń.
+* Przygotowanie kodu właściwych analiz wraz z opisem, co przeprowadzone analizy pozwalają pokazać i w jaki sposób wiąże się to z postawionym problemem badawczym.
+
+#### Etap 3
+* Podsumowanie uzyskanych wyników - Upewnij się, że umiesz w wyczerpujący i systematyczny sposób odpowiedzieć na postawiony problem badawczy przy pomocy wyników swojej analizy
+* Przygotowanie kodu tworzącego ilustracje do prezentacji wyników
+* Przygotownaie prezentacji w formacie PowerPoint lub podobnym
+
+### Przykładowe tematy
+
+* Od czego zależy popularność piosenek w serwisie Spotify.
+* Jakie są różnice pomiędzy utworami muzycznymi zaliczającym się do różnych stylów muzycznych.
+* Jak jest wielkość różnic dochodowych pomiędzy kobietami a mężczyznami w różnych grupach zawodowych. Jak zmienia się ona w cyklu życia (tj. dla osób w różnym wieku) i jak przebieg tego związku zmienił się w czasie.
+* Od czego zależy cena domów w tym amerykańskim mieście.
 
 ## Materiały dodatkowe dla zainteresowanych
 
