@@ -42,11 +42,16 @@ Udział w zajęciach wymaga instalacji R:
 
 * [zajęcia 1 - wprowadzenie](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia1%20-%20wprowadzenie.pdf)
 * [zajęcia 2 - ramki danych](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%202.zip)
-* [zajecia 3 - podstawowe operacja na ramkach danych](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%203.zip)
+* [zajecia 3 - podstawowe operacje na ramkach danych](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%203.zip)
+* [zajecia 4 - przekształcanie ramek danych i rozkład jednej zmiennej](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%204.zip)
+* [zajecia 5 - wprowadzenie do ggplot](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%205.zip)
+* [zajecia 6 - zmienne ciągłe i parametry zmiennych](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%206.zip)
+* [zajecia 7 - rozkłady wielu zmiennych](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%207.zip)
 
 ### Prace domowe
 
 * [Pakiet zadań 1 - ramki danych i podstawowe operacje na ramkach danych](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/Pakiet%20zadan%201.zip)
+* [Pakiet zadań 2 - przekształcanie ramek danych, rozkład jednej zmiennej i wprowadzenie do ggplot](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/Pakietzadan2.zip)
 
 ### Aktualnie potrzebne zbiory danych
 
