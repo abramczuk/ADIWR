@@ -99,6 +99,10 @@ oraz [rozwiązania do tego zestawu](https://www.youtube.com/watch?v=_5N3hlg8HXo&
 * Jak jest wielkość różnic dochodowych pomiędzy kobietami a mężczyznami w różnych grupach zawodowych. Jak zmienia się ona w cyklu życia (tj. dla osób w różnym wieku) i jak przebieg tego związku zmienił się w czasie.
 * Od czego zależy cena domów w tym amerykańskim mieście.
 
+### Przykładowy kod do projektu zaliczeniowego
+
+* [Piosenki Spotify](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/example.Rmd)
+
 ## Materiały dodatkowe dla zainteresowanych
 
 ### Pakiety wpierające tworzenie tabel:
