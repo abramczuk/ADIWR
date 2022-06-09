@@ -42,9 +42,9 @@ Udział w zajęciach wymaga instalacji R:
 * [zajecia 5 - wprowadzenie do ggplot](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%205.zip)
 * [zajecia 6 - zmienne ciągłe i parametry zmiennych](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%206.zip)
 * [zajecia 7 - rozkłady wielu zmiennych](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%207.zip)
-* [zajecia 8 - związki między zmiennymi]
-* [zajecia 9 - regresja liniowa]
-* [bonus - różne zmienne w regresjach, regresje nieliniowe]
+* [zajecia 8 - związki między zmiennymi](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%208.7z)
+* [zajecia 9 - regresja liniowa](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%209.7z)
+* [bonus - różne zmienne w regresjach, regresje nieliniowe](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%2010.7z)
 
 ### Prace domowe
 
