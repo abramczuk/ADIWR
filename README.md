@@ -12,12 +12,7 @@ Część materiałów na zajęcia *Analiza danych ilościowych z wykorzystaniem 
 * Prosta regresja liniowa
 * Regresja wielokrotna
 * Regresja logistyczna
-* Porównywnie dwóch średnich 
-* ANOVA
-* testy nieparametryczne
-* analiza czynnikowa
 * dane na słabych skalach
-* modele ścieżkowe; metoda k-średnich; drzewa decyzyjne ????
 
 ## Zasady zaliczenia
 Ocena końcowa z przedmiotu składa się z:
@@ -47,6 +42,9 @@ Udział w zajęciach wymaga instalacji R:
 * [zajecia 5 - wprowadzenie do ggplot](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%205.zip)
 * [zajecia 6 - zmienne ciągłe i parametry zmiennych](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%206.zip)
 * [zajecia 7 - rozkłady wielu zmiennych](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%207.zip)
+* [zajecia 8 - związki między zmiennymi]
+* [zajecia 9 - regresja liniowa]
+* [bonus - różne zmienne w regresjach, regresje nieliniowe]
 
 ### Prace domowe
 
