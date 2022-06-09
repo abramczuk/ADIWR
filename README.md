@@ -46,6 +46,13 @@ Udział w zajęciach wymaga instalacji R:
 * [zajecia 9 - regresja liniowa](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%209.7z)
 * [bonus - różne zmienne w regresjach, regresje nieliniowe](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zajecia%2010.7z)
 
+### Powtórzenie
+
+* [zadania na powtórzenie przed kolokwium](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/zadania%20-%20powt%C3%B3rzenie.7z)
+* [zestaw powtórzeniowy grupy 1](https://github.com/abramczuk/ADIWR/tree/main/grupa%201/Cwiczenia/Kolokwium_przygotowanie2)
+oraz [rozwiązania do tego zestawu](https://www.youtube.com/watch?v=_5N3hlg8HXo&list=PL4RDUSJtk0C79YbN_a18AevPYuc7j_WX3&index=11)
+* [filmy z rozwiązaniami różnych zadań](https://www.youtube.com/playlist?list=PL4RDUSJtk0C79YbN_a18AevPYuc7j_WX3) - UWAGA - część materiału wykracza poza materiał kolokwium końcowego
+
 ### Prace domowe
 
 * [Pakiet zadań 1 - ramki danych i podstawowe operacje na ramkach danych](https://github.com/abramczuk/ADIWR/blob/main/grupy%202%20i%203/Pakiet%20zadan%201.zip)
