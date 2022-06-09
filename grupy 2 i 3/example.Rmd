@@ -1,0 +1,163 @@
+---
+title: "Analiza danych z R: przykład analizy"
+author: "Katarzyna Abramczuk, Agnieszka Karlińska, Tomasz Żółtak"
+date: "13.04.2021"
+output:
+  html_notebook: 
+    toc: yes
+editor_options:
+  chunk_output_type: inline
+---
+
+![](https://raw.githubusercontent.com/tzoltak/3502-SCC-ADR/master/belka_gorna.png)
+
+```{r}
+library(readr)
+library(dplyr)
+library(tidyverse)
+library(ggplot2)
+```
+
+
+# Zbiór danych
+
+W poniższej analizie użyjemy zbioru danych dotyczącego piosenek na Spotify. Zbiór można pobrać stąd:
+
+```{r}
+spotify <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-21/spotify_songs.csv')
+```
+
+Pod [tym linkiem](https://github.com/rfordatascience/tidytuesday/blob/master/data/2020/2020-01-21/readme.md#spotify_songscsv) znajduje się słownik danych.
+
+# Problem badawczy
+
+Postawimy sobie następujące pytania badawcze:
+
+Jakimi cechami różnią się piosenki reprezetnujące poszczególne gatunki? 
+
+# Obejrzenie danych
+
+Zaczniemy od obejrzenia danych
+
+```{r}
+spotify %>% summary()
+spotify %>% head()
+```
+
+W danych nie ma braków danych.
+Zobaczmy jakie mamy gatunki muzyczne.
+
+```{r}
+spotify %>% count(playlist_genre)
+```
+
+Wszystkie gatunki są odpowiednio reprezentowane. Spójrzmy teraz na rozkłady interesujących nas cech muzycznych.
+
+```{r}
+feature_names <- names(spotify)[12:23]
+
+spotify %>%
+  select(c(feature_names)) %>%
+  pivot_longer(cols = feature_names) %>%
+  ggplot() + geom_histogram(aes(x = value)) +
+  facet_wrap(~name, ncol = 3, scales = 'free') +
+  labs(title = 'Rozkłady cech muzyki',
+       x = '', y = '') +
+  theme(axis.text.y = element_blank())
+```
+Niektóre cechy muzyczne mają dość charakterystyczne rozkłady. Wiele z nich jest skośnych. Najlepiej widac do na przykładzie Instrumentalness. Dwie zmienne nie mają charakteru ilościowego. key przyjmuje niewielką liczbę wartości odpowiadającą liczbie tonacji, mode jest zmienną zerojedynkową odnosząca się do rodzaju gamy (durowej lub molowej).
+
+# Zmienne jakościowe
+
+Popatrzmy najpierw na rozkłady zmiennych jakościowych dla każdego z gatunków. Ponieważ obie odnoszą się do tonacji, spojrzymy najpierw na ich rozkład łączny
+
+
+```{r}
+spotify%>% 
+  count(mode, key) %>% 
+  pivot_wider(names_from = mode,
+              values_from = n)
+```
+
+Obejrzymy te rozkłady dla każdego gatunku. Żeby łatwiej było zobaczyć różnice, zwizualizujemy je. Porównamy najpiew rozkłady warunkowe tonacji w podgrupach gatunków.
+
+```{r}
+spotify %>% mutate(key = factor(key)) %>%
+  ggplot() +
+  geom_bar(aes(y = playlist_genre, fill = key), position = "fill") +
+  theme_bw() +
+  scale_fill_brewer(palette="Paired")
+```
+Widać tu kilka wyraźnych różnic. Np dla rocka częściej spotykanymi tonacjami są 0, 7 i 9, a dla Rapu 1. Na prezentacji należałoby sprawdzić jakie to sa konkretne tonacje i przeanalizować też pozostałe gatunki.
+
+Poniżej porównujemy gatunki pod względem używanej gamy:
+
+
+```{r}
+spotify %>% mutate(mode = factor(mode)) %>%
+  ggplot() +
+  geom_bar(aes(y = playlist_genre, fill = mode), position = "fill") +
+  theme_bw() +
+  scale_fill_brewer(palette="Dark2")
+```
+
+Jeśli chodzi o gamę najbardziej odróżniają się utwory rockowe, w których częściej używa się gamy durowej.
+
+# Zmienne ilościowe
+
+Dla zmiennych ilościowych obliczymy kilka statystyk poziomu wartości i porównamy je między gatunkami.
+
+```{r}
+feature_numerical <- feature_names[c(-3, -5)]
+
+meanfeatures <- spotify %>%
+  select(playlist_genre, c(feature_numerical)) %>%
+  pivot_longer(cols = feature_numerical) %>%
+  group_by(playlist_genre, name) %>%
+  summarise(meanf = mean(value))
+
+meanfeatures %>% 
+  ggplot() +
+  geom_bar(aes(x = playlist_genre,
+               y = meanf),
+           stat = "identity",
+           fill = "cadetblue", color = "black") +
+  facet_wrap(~name, ncol = 2, scales = 'free')
+
+
+```
+
+Widzimy tu kilka wyrażnych różnic np. elektroniczna muzyka taneczna jest wyraźnie mniej akustyczna i bardziej instrumentalna, utwory rapowe mają więcej tekstu, rock jest mniej taneczny, a muzyka latynoska brzmi bardziej pozytywnie.
+
+Ponieważ średnie są bardzo wrażliwe na istnienie obserwacji odstających policzymy jeszcze mediany.
+
+```{r}
+spotify %>%
+  select(playlist_genre, c(feature_numerical)) %>%
+  pivot_longer(cols = feature_numerical) %>%
+  group_by(playlist_genre, name) %>%
+  summarise(medf = median(value)) %>%
+  ggplot() +
+  geom_bar(aes(x = playlist_genre,
+               y = medf),
+           stat = "identity",
+           fill = "cadetblue", color = "black") +
+  facet_wrap(~name, ncol = 2, scales = 'free')
+
+
+```
+Porównanie median prowadzi do tych samych wniosków, co porównanie średnich, jednak różnice miedzy gatunkami są wyrażniejsze.
+
+# Podsumowanie
+
+W podsumowaniu powinny znaleźć się główne wnioski z Państwa analizy. 
+Jeśli ktoś z Państwa jest zainteresowany, co można zrobić dalej z tak rozpoczętą analizą [tutaj](https://www.kaylinpavlik.com/classifying-songs-genres/) znajdą Państwo przykład. 
+
+
+---
+
+Materiały na zajęcia *Analiza danych ilościowych z wykorzystaniem R* zostały przygotowane w ramach projektu *Program zintegrowanych działań na rzecz rozwoju Uniwersytetu Warszawskiego*, realizowanego w ramach programu operacyjnego Wiedza Edukacja Rozwój, oś priorytetowa III. *Szkolnictwo wyższe dla gospodarki i rozwoju*, działanie: 3.5 *Kompleksowe programy szkół wyższych*.
+
+---
+
+![](https://raw.githubusercontent.com/tzoltak/3502-SCC-ADR/master/belka_dolna.png)
